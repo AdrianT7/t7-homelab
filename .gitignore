@@ -402,3 +402,6 @@ FodyWeavers.xsd
 # Terraform
 *.terraform*
 *.tfstate*
+
+# Secrets
+**/secrets/
