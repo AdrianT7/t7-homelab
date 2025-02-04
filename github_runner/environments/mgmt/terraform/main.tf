@@ -1,4 +1,8 @@
 terraform {
+   backend "gcs" {
+    bucket = "t7_gcp_tf_bucket"
+    prefix = "mgmt/github_runner"
+  }
   required_providers {
     proxmox = {
       source  = "Telmate/proxmox"
