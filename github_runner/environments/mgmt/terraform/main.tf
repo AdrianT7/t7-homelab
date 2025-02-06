@@ -24,7 +24,7 @@ module "gh_runner_instance" {
 
   instance_name = "t7-gh-runner"
   target_node   = "proxmox"
-  template_name = "debian-12-vm-template"
+  template_name = "debian-12-t7-template"
   sockets       = "1"
   cores         = "2"
   memory        = "512"
