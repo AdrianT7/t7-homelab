@@ -1,10 +1,10 @@
-name: 'Deploy github_runner'
+name: Deploy github_runner
 
 on:
   workflow_dispatch:
     inputs:
       environment:
-        description: 'Environment to execute the code against'
+        description: Environment to execute the code against
         type: environment
         required: true
 
@@ -13,8 +13,9 @@ permissions:
 
 jobs:
   terraform-plan:
-    name: 'Terraform plan'
+    name: Terraform plan
     runs-on: [self-hosted, Linux, Proxmox]
+    environment: ${{ inputs.environment }}
     defaults:
       run:
         working-directory: github_runner/environments/${{ inputs.environment }}/terraform
@@ -44,7 +45,7 @@ jobs:
           path: github_runner/environments/${{ inputs.environment }}/terraform
   
   approve-changes:
-    name: 'Approve Terraform plan'
+    name: Approve Terraform plan
     runs-on: [self-hosted, Linux, Proxmox]
     needs: terraform-plan
     environment: review
@@ -53,9 +54,10 @@ jobs:
         run: echo "Changes has been accepted.."
 
   terraform-apply:
-      name: 'Apply Terraform changes'
+      name: Apply Terraform changes
       runs-on: [self-hosted, Linux, Proxmox]
       needs: approve-changes
+      environment: ${{ inputs.environment }}
       env: 
         TF_VAR_proxmox_api_token_secret: ${{ secrets.PROXMOX_TF_API_KEY }}
       defaults:
