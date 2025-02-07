@@ -38,7 +38,7 @@ jobs:
         run: terraform plan -out=tfplan
 
       - name: Save Plan Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: tfplan
           path: github_runner/environments/${{ inputs.environment }}/terraform
@@ -75,7 +75,7 @@ jobs:
             } >> $GITHUB_ENV
 
         - name: Download Plan Artifact
-          uses: actions/download-artifact@v3
+          uses: actions/download-artifact@v4
           with:
             name: tfplan
             path: github_runner/environments/${{ inputs.environment }}/terraform
