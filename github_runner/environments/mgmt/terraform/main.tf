@@ -19,8 +19,8 @@ provider "proxmox" {
 }
 
 module "gh_runner_instance" {
-  source = "../../../modules/proxmox_vm"
-  providers = { proxmox = proxmox }
+  source        = "../../../modules/proxmox_vm"
+  providers     = { proxmox = proxmox }
 
   instance_name = "t7-gh-runner"
   target_node   = "proxmox"
