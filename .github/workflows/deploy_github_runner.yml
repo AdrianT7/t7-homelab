@@ -16,6 +16,9 @@ jobs:
     name: Terraform plan
     runs-on: [self-hosted, Linux, Proxmox]
     environment: ${{ inputs.environment }}
+    env: 
+      TF_VAR_proxmox_api_token_secret: ${{ secrets.PROXMOX_TF_API_KEY }}
+      GOOGLE_APPLICATION_CREDENTIALS: gcp_tf_storage_sa_key.json
     defaults:
       run:
         working-directory: github_runner/environments/${{ inputs.environment }}/terraform
@@ -24,13 +27,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Decode GCP credentials and set env
+      - name: Set GCP credentials
         run: |
-          {
-            echo "GOOGLE_APPLICATION_CREDENTIALS<<EOF"
-            echo '${{ secrets.GCP_TF_STORAGE_SA_KEY }}' | base64 --decode
-            echo "EOF"
-          } >> $GITHUB_ENV
+          echo ${{ secrets.GCP_TF_STORAGE_SA_KEY }} | base64 --decode > gcp_tf_storage_sa_key.json
 
       - name: Terraform Init
         run: terraform init
@@ -43,6 +42,10 @@ jobs:
         with:
           name: tfplan
           path: github_runner/environments/${{ inputs.environment }}/terraform
+
+      - name: Cleanup GCP credentials
+        if: always()
+        run: rm -f gcp_tf_storage_sa_key.json
   
   approve-changes:
     name: Approve Terraform plan
@@ -60,21 +63,18 @@ jobs:
       environment: ${{ inputs.environment }}
       env: 
         TF_VAR_proxmox_api_token_secret: ${{ secrets.PROXMOX_TF_API_KEY }}
+        GOOGLE_APPLICATION_CREDENTIALS: gcp_tf_storage_sa_key.json
       defaults:
         run:
           working-directory: github_runner/environments/${{ inputs.environment }}/terraform
           shell: bash
       steps:
+        - name: Set GCP credentials
+          run: |
+            echo ${{ secrets.GCP_TF_STORAGE_SA_KEY }} | base64 --decode > gcp_tf_storage_sa_key.json
+    
         - name: Checkout
           uses: actions/checkout@v4
-
-        - name: Decode GCP credentials and set env
-          run: |
-            {
-              echo "GOOGLE_APPLICATION_CREDENTIALS<<EOF"
-              echo '${{ secrets.GCP_TF_STORAGE_SA_KEY }}' | base64 --decode
-              echo "EOF"
-            } >> $GITHUB_ENV
 
         - name: Download Plan Artifact
           uses: actions/download-artifact@v4
@@ -84,3 +84,7 @@ jobs:
         
         - name: Terraform apply
           run: terraform apply -auto-approve -input=false tfplan
+
+        - name: Cleanup GCP credentials
+          if: always()
+          run: rm -f gcp_tf_storage_sa_key.json
