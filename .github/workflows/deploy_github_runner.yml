@@ -29,7 +29,7 @@ jobs:
 
       - name: Set GCP credentials
         run: |
-          echo ${{ secrets.GCP_TF_STORAGE_SA_KEY }} | base64 --decode > gcp_tf_storage_sa_key.json
+          echo "${{ secrets.GCP_TF_STORAGE_SA_KEY }}" | base64 --decode > gcp_tf_storage_sa_key.json
 
       - name: Terraform Init
         run: terraform init
@@ -71,7 +71,7 @@ jobs:
       steps:
         - name: Set GCP credentials
           run: |
-            echo ${{ secrets.GCP_TF_STORAGE_SA_KEY }} | base64 --decode > gcp_tf_storage_sa_key.json
+            echo "${{ secrets.GCP_TF_STORAGE_SA_KEY }}" | base64 --decode > gcp_tf_storage_sa_key.json
     
         - name: Checkout
           uses: actions/checkout@v4
