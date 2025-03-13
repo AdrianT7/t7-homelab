@@ -20,7 +20,7 @@ jobs:
       GOOGLE_APPLICATION_CREDENTIALS: gcp_tf_storage_sa_key.json
     defaults:
       run:
-        working-directory: github_runner/environments/${{ inputs.environment }}/terraform
+        working-directory: gcp_tf_backend/environments/${{ inputs.environment }}/terraform
         shell: bash
     steps:
       - name: Checkout
@@ -40,7 +40,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: tfplan
-          path: github_runner/environments/${{ inputs.environment }}/terraform
+          path: gcp_tf_backend/environments/${{ inputs.environment }}/terraform
 
       - name: Cleanup GCP credentials
         if: always()
@@ -64,7 +64,7 @@ jobs:
       GOOGLE_APPLICATION_CREDENTIALS: gcp_tf_storage_sa_key.json
     defaults:
       run:
-        working-directory: github_runner/environments/${{ inputs.environment }}/terraform
+        working-directory: gcp_tf_backend/environments/${{ inputs.environment }}/terraform
         shell: bash
     steps:
       - name: Set GCP credentials
@@ -78,7 +78,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: tfplan
-          path: github_runner/environments/${{ inputs.environment }}/terraform
+          path: gcp_tf_backend/environments/${{ inputs.environment }}/terraform
       
       - name: Terraform init
         run: terraform init
