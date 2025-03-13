@@ -57,37 +57,64 @@ jobs:
         run: echo "Changes has been accepted.."
 
   terraform-apply:
-      name: Apply Terraform changes
-      runs-on: [self-hosted, Linux, Proxmox]
-      needs: approve-changes
-      environment: ${{ inputs.environment }}
-      env: 
-        TF_VAR_proxmox_api_token_secret: ${{ secrets.PROXMOX_TF_API_KEY }}
-        GOOGLE_APPLICATION_CREDENTIALS: gcp_tf_storage_sa_key.json
-      defaults:
-        run:
-          working-directory: github_runner/environments/${{ inputs.environment }}/terraform
-          shell: bash
-      steps:
-        - name: Set GCP credentials
-          run: |
-            echo "${{ secrets.GCP_TF_STORAGE_SA_KEY }}" | base64 --decode > gcp_tf_storage_sa_key.json
-    
-        - name: Checkout
-          uses: actions/checkout@v4
+    name: Apply Terraform changes
+    runs-on: [self-hosted, Linux, Proxmox]
+    needs: approve-changes
+    environment: ${{ inputs.environment }}
+    env: 
+      TF_VAR_proxmox_api_token_secret: ${{ secrets.PROXMOX_TF_API_KEY }}
+      GOOGLE_APPLICATION_CREDENTIALS: gcp_tf_storage_sa_key.json
+    defaults:
+      run:
+        working-directory: github_runner/environments/${{ inputs.environment }}/terraform
+        shell: bash
+    steps:
+      - name: Set GCP credentials
+        run: |
+          echo "${{ secrets.GCP_TF_STORAGE_SA_KEY }}" | base64 --decode > gcp_tf_storage_sa_key.json
 
-        - name: Download Plan Artifact
-          uses: actions/download-artifact@v4
-          with:
-            name: tfplan
-            path: github_runner/environments/${{ inputs.environment }}/terraform
-        
-        - name: Terraform init
-          run: terraform init
+      - name: Checkout
+        uses: actions/checkout@v4
 
-        - name: Terraform apply
-          run: terraform apply -auto-approve tfplan
+      - name: Download Plan Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: tfplan
+          path: github_runner/environments/${{ inputs.environment }}/terraform
+      
+      - name: Terraform init
+        run: terraform init
 
-        - name: Cleanup GCP credentials
-          if: always()
-          run: rm -f gcp_tf_storage_sa_key.json
+      - name: Terraform apply
+        run: terraform apply -auto-approve tfplan
+
+      - name: Cleanup GCP credentials
+        if: always()
+        run: rm -f gcp_tf_storage_sa_key.json
+
+  ansible:
+    name: Configure host
+    runs-on: [self-hosted, Linux, Proxmox]
+    needs: terraform-apply
+    environment: ${{ inputs.environment }}
+    env: 
+      T7_SSH_USER: ${{ secrets.T7_SSH_USER }}
+      T7_SSH_PORT: ${{ secrets.T7_SSH_PORT }}
+    defaults:
+      run:
+        working-directory: github_runner/environments/${{ inputs.environment }}/ansible
+        shell: bash
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure SSH
+        run: | 
+          mkdir ~/.ssh && echo "${{ secrets.T7_SSH_KEY }}" > ~/.ssh/${{ secrets.T7_SSH_USER }}.key
+
+      - name: Run playbook
+        run: ansible-playbook -i inventory.yml prepare_gh_runner_host.yml --ssh-common-args='-o StrictHostKeyChecking=no'
+
+      - name: Cleanup ansible key
+        if: always()
+        run: rm ~/.ssh/${{ secrets.T7_SSH_USER }}.key
