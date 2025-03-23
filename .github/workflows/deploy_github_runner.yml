@@ -100,6 +100,8 @@ jobs:
     env: 
       T7_SSH_USER: ${{ secrets.T7_SSH_USER }}
       T7_SSH_PORT: ${{ secrets.T7_SSH_PORT }}
+      docker_hub_login: ${{ secrets.docker_hub_login }}
+      docker_hub_password: ${{ secrets.docker_hub_password }}
     defaults:
       run:
         working-directory: github_runner/environments/${{ inputs.environment }}/ansible
