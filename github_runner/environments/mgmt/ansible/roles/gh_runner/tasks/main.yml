@@ -22,4 +22,10 @@
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: '0640'
+
+- name: Log in into Docker Hub
+  ansible.builtin.command:
+    cmd: "docker login -u {{ gh_runner_docker_hub_login }} -p '{{ gh_runner_docker_hub_password }}'"
+  become: false
+  no_log: true
 ...

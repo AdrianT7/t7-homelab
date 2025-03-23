@@ -13,7 +13,9 @@ gh_runner:
     docker_docker_version: "20.10.24+dfsg1-1+deb12u1"
     docker_docker_compose_version: "1.29.2-3"
     gh_runner_docker_dir: "/home/{{ ansible_user }}/gh_actions"
-    gh_runner_docker_image: "adriant7/gh-runner:1.0"
+    gh_runner_docker_image: "adriant7/t7-gh-runner:1.0.0"
+    gh_runner_docker_hub_login: "{{ lookup('env', 'docker_hub_login') }}"
+    gh_runner_docker_hub_password: "{{ lookup('env', 'docker_hub_password') }}"
     service_verification_services:
       - docker
       - ssh
