@@ -24,11 +24,11 @@ module "dns_01_instance" {
 
   instance_name = "t7-dns-01"
   target_node   = "proxmox"
-  template_name = "debian-12-t7-template"
+  template_name = "ext-debian-12-t7-template"
   sockets       = "1"
   cores         = "1"
-  memory        = "256"
-  disk_size     = "10G"
+  memory        = "512"
+  disk_size     = "16G"
   storage       = "external-storage"
 }
 
@@ -38,10 +38,10 @@ module "dns_02_instance" {
 
   instance_name = "t7-dns-02"
   target_node   = "proxmox"
-  template_name = "debian-12-t7-template"
+  template_name = "ext-debian-12-t7-template"
   sockets       = "1"
   cores         = "1"
-  memory        = "256"
-  disk_size     = "10G"
+  memory        = "512"
+  disk_size     = "16G"
   storage       = "external-storage"
 }

@@ -18,6 +18,7 @@ resource "proxmox_vm_qemu" "proxmox_instance" {
   memory      = var.memory
   scsihw      = "virtio-scsi-single"
   boot        = "order=scsi0"
+  onboot      = true
 
   disk {
     slot     = "scsi0"
