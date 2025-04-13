@@ -67,12 +67,12 @@ jobs:
         working-directory: gcp_tf_backend/environments/${{ inputs.environment }}/terraform
         shell: bash
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Set GCP credentials
         run: |
           echo "${{ secrets.GCP_TF_STORAGE_SA_KEY }}" | base64 --decode > gcp_tf_storage_sa_key.json
-
-      - name: Checkout
-        uses: actions/checkout@v4
 
       - name: Download Plan Artifact
         uses: actions/download-artifact@v4
