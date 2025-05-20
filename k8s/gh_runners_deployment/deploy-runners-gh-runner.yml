@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: gh-runner
+  name: gh-runner-gh-runner
+  namespace: gh-runner
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gh-runner
+  template:
+    metadata:
+      labels:
+        app: gh-runner
+    spec:
+      containers:
+      - name: t7-gh-runner
+        image: adriant7/t7-gh-runner:latest@sha256:86f706ac3adef631ee3b19412bf45d1c56666422f0fd50f7d40b880b413d60c7
+        env:
+        - name: GH_RUNNER_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: gh-runner-tokens
+              key: GH_RUNNER_TOKEN_gh-runner
+        - name: GH_REPO_URL
+          value: "https://github.com/AdrianT7/gh-runner"
+        - name: GH_RUNNER_NAME
+          value: ""
+        - name: GH_RUNNER_GROUP
+          value: "default"
+        - name: GH_RUNNER_WORK_DIR
+          value: "_work"
+        - name: GH_RUNNER_LABELS
+          value: "self-hosted,Linux,Proxmox"
+      imagePullSecrets:
+      - name: docker-hub-cred
