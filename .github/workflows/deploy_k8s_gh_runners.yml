@@ -1,0 +1,52 @@
+name: Deploy k8s gh_runners
+
+on:
+    workflow_dispatch:
+
+jobs:
+  deploy-runners:
+    name: Deploy k8s gh_runners
+    runs-on: [self-hosted, Linux, Proxmox]
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Authenticate into cluster
+        run: |
+          mkdir -p ~/.kube && \
+          echo ${{ secrets.KUBECTL_CRED }} | base64 --decode > ~/.kube/config
+
+      - name: Create namespace for gh_runners
+        run: kubectl apply -f k8s/gh_runners_deployment/namespace.yml
+
+      - name: Provide token for runners
+        run: |
+          kubectl create secret generic gh-runner-tokens \
+            --from-literal=GH_RUNNER_TOKEN_gh-runner=${{ secrets.GH_RUNNER_TOKEN_GH_RUNNER }} \
+            --from-literal=GH_RUNNER_TOKEN_t7-gh-runner=${{ secrets.GH_RUNNER_TOKEN_T7_GH_RUNNER }} \
+            --from-literal=GH_RUNNER_TOKEN_t7-homelab=${{ secrets.GH_RUNNER_TOKEN_T7_HOMELAB }} \
+            -n gh-runner \
+            --dry-run=client -o yaml | kubectl apply -f -
+
+      - name: Provide secret for docker-hub
+        run: |
+          echo ${{ secrets.DOCKER_HUB_CRED }} | base64 --decode > config.json
+
+          if [ ! -f config.json ]; then
+            echo "Decoded config.json does not exist. Failing step..." ; exit 1
+          fi
+
+          kubectl create secret generic docker-hub-cred \
+            --from-file=config.json \
+            -n gh-runner \
+            --dry-run=client -o yaml | kubectl apply -f -
+
+      - name: Delete tmp docker-hub json
+        run: rm config.json
+      
+      - name: Deploy runners
+        run: kubectl apply -f k8s/gh_runners_deployment
+
+      - name: Cleanup kubeconfig
+        run: rm -rf ~/.kube
