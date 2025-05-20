@@ -37,7 +37,7 @@ jobs:
             echo "Decoded config.json does not exist. Failing step..." ; exit 1
           fi
 
-          kubectl create secret generic docker-hub-cred \
+          kubectl create secret docker-registry docker-hub-cred \
             --from-file=config.json \
             -n gh-runner \
             --dry-run=client -o yaml | kubectl apply -f -
