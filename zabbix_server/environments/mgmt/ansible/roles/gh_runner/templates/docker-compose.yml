@@ -1,0 +1,15 @@
+version: '3'
+services:
+  github-runner:
+    image: {{ gh_runner_docker_image }}
+    environment:
+      - GH_REPO_URL=${GH_REPO_URL}
+      - GH_RUNNER_NAME=${GH_RUNNER_NAME}
+      - GH_RUNNER_GROUP=${GH_RUNNER_GROUP}
+      - GH_RUNNER_TOKEN=${GH_RUNNER_TOKEN}
+      - GH_RUNNER_WORK_DIR=${GH_RUNNER_WORK_DIR}
+      - GH_RUNNER_LABELS=${GH_RUNNER_LABELS}
+    restart: "always"
+    deploy:
+      replicas: 2
+    privileged: "false"
