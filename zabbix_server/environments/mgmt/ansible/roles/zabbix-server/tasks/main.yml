@@ -1,0 +1,45 @@
+---
+- name: Create directory for zabbix files
+  ansible.builtin.file:
+    path: "{{ zabbix_server_docker_dir }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: '0750'
+
+- name: Create directory for zabbix db
+  ansible.builtin.file:
+    path: "{{ zabbix_server_docker_dir }}/zabbix-db/"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: '0750'
+
+- name: Copy .env file
+  ansible.builtin.copy:
+    src: .env
+    dest: "{{ zabbix_server_docker_dir }}"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: '0640'
+
+- name: Copy docker-compose file
+  ansible.builtin.template:
+    src: docker-compose.yml
+    dest: "{{ zabbix_server_docker_dir }}"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: '0640'
+
+- name: Log in into Docker Hub
+  ansible.builtin.command:
+    cmd: "docker login -u '{{ docker_hub_login }}' -p '{{ docker_hub_password }}'"
+  become: false
+  no_log: true
+
+- name: Deploy zabbix-server
+  ansible.builtin.command:
+    chdir: "{{ zabbix_server_docker_dir }}"
+    cmd: "docker-compose up -d"
+  become: false
+...
