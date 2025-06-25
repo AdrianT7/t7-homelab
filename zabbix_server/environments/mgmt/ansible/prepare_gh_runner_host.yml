@@ -1,9 +1,0 @@
----
-- name: Prepare Github Runner
-  hosts: gh_runner
-  become: true
-  roles:
-    - docker
-    - gh_runner
-    - service_verification
-...

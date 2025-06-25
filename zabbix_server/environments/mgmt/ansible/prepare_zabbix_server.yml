@@ -1,0 +1,9 @@
+---
+- name: Prepare zabbix server
+  hosts: zabbix-server
+  become: true
+  roles:
+    - docker
+    - zabbix-server
+    - service_verification
+...

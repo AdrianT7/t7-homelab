@@ -6,16 +6,15 @@ all:
     ansible_port: "{{ lookup('env', 'T7_SSH_PORT') }}"
     become: true
 
-gh_runner:
+zabbix-server:
   hosts:
-    homelab-github-runner-01.home.t7-lab.pl:
+    zabbix-server-01.home.t7-lab.pl:
   vars:
-    docker_docker_version: "20.10.24+dfsg1-1+deb12u1"
+    docker_docker_version: "20.10.24+dfsg1-1+deb12u1+b1"
     docker_docker_compose_version: "1.29.2-3"
-    gh_runner_docker_dir: "/home/{{ ansible_user }}/gh_actions"
-    gh_runner_docker_image: "adriant7/t7-gh-runner:latest@sha256:988a7f839ce2a446100e1d901612eceb1a36b8a195b16d6b396decf95bb67f18"
-    gh_runner_docker_hub_login: "{{ lookup('env', 'docker_hub_login') }}"
-    gh_runner_docker_hub_password: "{{ lookup('env', 'docker_hub_password') }}"
+    docker_hub_login: "{{ lookup('env', 'docker_hub_login') }}"
+    docker_hub_password: "{{ lookup('env', 'docker_hub_password') }}"
+    zabbix_server_docker_dir: "/home/{{ ansible_user }}/docker/zabbix-server"
     service_verification_services:
       - docker
       - ssh
