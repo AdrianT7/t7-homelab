@@ -1,7 +1,7 @@
 version: '3.7'
 services:
   mysql-server:
-    image: mysql:8.0-oracle
+    image: mysql:8.4-oracle
     ports:
       - 3306:3306
     environment:
