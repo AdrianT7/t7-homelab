@@ -1,0 +1,27 @@
+---
+- name: Update Apt package index
+  ansible.builtin.apt:
+    update_cache: true
+
+- name: Install Zabbix-Agent packages
+  ansible.builtin.apt:
+    name: zabbix-agent
+    state: present
+  notify: Restart Zabbix-Agent
+
+- name: Enable Zabbix-Agent
+  ansible.builtin.service:
+    name: zabbix-agent
+    enabled: true
+
+- name: Deploy zabbix_agentd.conf
+  ansible.builtin.template:
+    src: zabbix_agentd.conf.j2
+    dest: /etc/zabbix/zabbix_agentd.conf
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Restart Zabbix Agent
+
+- meta: flush_handlers
+...
