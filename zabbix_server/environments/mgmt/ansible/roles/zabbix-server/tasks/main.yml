@@ -16,7 +16,7 @@
     mode: '0750'
 
 - name: Copy .env file
-  ansible.builtin.copy:
+  ansible.builtin.template:
     src: .env
     dest: "{{ zabbix_server_docker_dir }}"
     owner: "{{ ansible_user }}"
