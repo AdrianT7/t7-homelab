@@ -4,6 +4,8 @@ all:
     ansible_user: "{{ lookup('env', 'T7_SSH_USER') }}"
     ansible_ssh_private_key_file: "~/.ssh/{{ ansible_user }}.key"
     ansible_port: "{{ lookup('env', 'T7_SSH_PORT') }}"
+    mysql_password: "{{ lookup('env', 'MYSQL_PASSWORD') }}"
+    mysql_root_password: "{{ lookup('env', 'MYSQL_ROOT_PASSWORD') }}"
     become: true
 
 zabbix-server:

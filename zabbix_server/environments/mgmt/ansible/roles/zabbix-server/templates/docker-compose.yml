@@ -1,14 +1,14 @@
 version: '3.7'
 services:
-  mysql-server:
-    image: mysql:8.0-oracle
+  mariadb-server:
+    image: mariadb:11.5
     ports:
       - 3306:3306
     environment:
-      - MYSQL_DATABASE=${MYSQL_DATABASE}
-      - MYSQL_USER=${MYSQL_USER}
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MARIADB_DATABASE=${MYSQL_DATABASE}
+      - MARIADB_USER=${MYSQL_USER}
+      - MARIADB_PASSWORD=${MYSQL_PASSWORD}
+      - MARIADB_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
     volumes:
       - ./zabbix-db:/var/lib/mysql
     restart: unless-stopped
@@ -33,7 +33,7 @@ services:
       replicas: 1
     privileged: false
     depends_on:
-      - mysql-server
+      - mariadb-server
   zabbix-frontend:
     image: zabbix/zabbix-web-nginx-mysql:7.0.15-ubuntu
     environment:
