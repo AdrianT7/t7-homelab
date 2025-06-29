@@ -15,7 +15,6 @@ jobs:
   ansible:
     name: Configure host
     runs-on: [self-hosted, Linux, Proxmox]
-    needs: terraform-apply
     environment: ${{ inputs.environment }}
     env: 
       T7_SSH_USER:         ${{ secrets.T7_SSH_USER }}
