@@ -31,12 +31,6 @@
     group: "{{ ansible_user }}"
     mode: '0640'
 
-- name: Log in into Docker Hub
-  ansible.builtin.command:
-    cmd: "docker login -u '{{ docker_hub_login }}' -p '{{ docker_hub_password }}'"
-  become: false
-  no_log: true
-
 - name: Deploy zabbix-server
   ansible.builtin.command:
     chdir: "{{ zabbix_server_docker_dir }}"

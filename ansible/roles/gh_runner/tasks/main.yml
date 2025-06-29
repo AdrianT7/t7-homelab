@@ -1,7 +1,7 @@
 ---
 - name: Create directory for Docker
   ansible.builtin.file:
-    path: "/home/{{ ansible_user }}/docker/"
+    path: "{{ gh_runner_docker_dir }}"
     state: directory
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
@@ -10,7 +10,7 @@
 - name: Copy .env file
   ansible.builtin.copy:
     src: .env
-    dest: "/home/{{ ansible_user }}/docker/"
+    dest: "{{ gh_runner_docker_dir }}"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: '0640'
@@ -18,7 +18,7 @@
 - name: Copy docker-compose file
   ansible.builtin.template:
     src: docker-compose.yml
-    dest: "/home/{{ ansible_user }}/docker/"
+    dest: "{{ gh_runner_docker_dir }}"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: '0640'
