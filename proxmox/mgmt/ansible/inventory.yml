@@ -12,4 +12,5 @@ proxmox:
   vars:
     service_verification_services:
       - ssh
+      - zabbix-agent
 ...
