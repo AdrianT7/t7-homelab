@@ -1,0 +1,8 @@
+---
+- name: Prepare proxmox
+  hosts: proxmox
+  become: true
+  roles:
+    - ../../../ansible/roles/zabbix-server
+    - ../../../ansible/roles/service_verification
+...
