@@ -5,6 +5,8 @@ on:
       environment:
         description: Environment to execute the code against
         type: choice
+        options:
+          - mgmt
         required: true
         default: mgmt
 
