@@ -21,7 +21,7 @@
     owner: root
     group: root
     mode: '0644'
-  notify: Restart Zabbix Agent
+  notify: Restart Zabbix-Agent
 
 - meta: flush_handlers
 ...

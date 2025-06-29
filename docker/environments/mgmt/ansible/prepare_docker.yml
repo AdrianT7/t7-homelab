@@ -4,6 +4,6 @@
   become: true
   roles:
     - docker
-    - service_verification
     - zabbix-agent
+    - service_verification
 ...
