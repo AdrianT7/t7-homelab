@@ -1,0 +1,45 @@
+name: Configure Proxmox
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Environment to execute the code against
+        type: environment
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  ansible:
+    name: Configure host
+    runs-on: [self-hosted, Linux, Proxmox]
+    needs: terraform-apply
+    environment: ${{ inputs.environment }}
+    env: 
+      T7_SSH_USER:         ${{ secrets.T7_SSH_USER }}
+      T7_SSH_PORT:         ${{ secrets.T7_SSH_PORT }}
+    defaults:
+      run:
+        working-directory: proxmox/environments/${{ inputs.environment }}/ansible
+        shell: bash
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure SSH
+        run: | 
+          mkdir -p ~/.ssh 
+          echo "${{ secrets.T7_SSH_KEY }}" > ~/.ssh/${{ secrets.T7_SSH_USER }}.key
+          chmod 600 ~/.ssh/${{ secrets.T7_SSH_USER }}.key
+
+      - name: Run playbook
+        run: ansible-playbook -i inventory.yml prepare_proxmox.yml --ssh-common-args='-o StrictHostKeyChecking=no'
+
+      - name: Cleanup ansible key
+        if: always()
+        run: |
+          if [[ -f ~/.ssh/${{ secrets.T7_SSH_USER }}.key ]]; then
+            rm ~/.ssh/${{ secrets.T7_SSH_USER }}.key
+          fi
