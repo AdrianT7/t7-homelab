@@ -1,0 +1,8 @@
+---
+- name: Prepare proxmox
+  hosts: proxmox
+  become: true
+  roles:
+    - zabbix-server
+    - service_verification
+...
