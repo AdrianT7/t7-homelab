@@ -23,5 +23,11 @@
     append: true
     state: present
 
+- name: Log in into Docker Hub
+  ansible.builtin.command:
+    cmd: "docker login -u '{{ docker_hub_login }}' -p '{{ docker_hub_password }}'"
+  become: false
+  no_log: true
+
 - meta: flush_handlers
 ...
