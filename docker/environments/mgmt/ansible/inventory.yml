@@ -1,0 +1,21 @@
+---
+all:
+  vars:
+    ansible_user: "{{ lookup('env', 'T7_SSH_USER') }}"
+    ansible_ssh_private_key_file: "~/.ssh/{{ ansible_user }}.key"
+    ansible_port: "{{ lookup('env', 'T7_SSH_PORT') }}"
+    become: true
+
+docker:
+  hosts:
+    docker-01.home.t7-lab.pl:
+  vars:
+    docker_docker_version: "20.10.24+dfsg1-1+deb12u1+b1"
+    docker_docker_compose_version: "1.29.2-3"
+    docker_hub_login: "{{ lookup('env', 'docker_hub_login') }}"
+    docker_hub_password: "{{ lookup('env', 'docker_hub_password') }}"
+    service_verification_services:
+      - docker
+      - ssh
+      - zabbix-agent
+...

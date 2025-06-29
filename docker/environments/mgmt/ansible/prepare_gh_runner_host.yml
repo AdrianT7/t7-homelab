@@ -1,0 +1,9 @@
+---
+- name: Prepare Docker VMs
+  hosts: docker
+  become: true
+  roles:
+    - docker
+    - service_verification
+    - zabbix-agent
+...
