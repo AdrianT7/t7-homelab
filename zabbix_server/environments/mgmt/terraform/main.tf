@@ -19,7 +19,7 @@ provider "proxmox" {
 }
 
 module "zabbix_server_01_instance" {
-  source        = "../../../modules/proxmox_vm"
+  source        = "../../../../terraform/modules/proxmox_vm"
   providers     = { proxmox = proxmox }
 
   instance_name = "zabbix-server-01"
