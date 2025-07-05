@@ -5,9 +5,12 @@ on:
     inputs:
       environment:
         description: Environment to execute the code against
-        type: environment
+        type: choice
+        options:
+          - mgmt
         required: true
-
+        default: mgmt
+        
 permissions:
   contents: read
 
