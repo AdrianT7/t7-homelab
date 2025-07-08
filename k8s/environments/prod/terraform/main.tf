@@ -21,32 +21,44 @@ provider "proxmox" {
 module "k8s_instance" {
   for_each = {
     "k8s-ctrl-plane-01" = {
-      target_node   = "proxmox"
-      template_name = "k8s-node-template"
+      target_node   = "proxmox-02"
+      template_name = "proxmox-02-k8s-node-01"
       sockets       = "1"
       cores         = "2"
       memory        = "3072"
-      disk_size     = "30G"
+      disk_size     = "35G"
+      storage       = "local-lvm"
     },
     "k8s-node-01" = {
       target_node   = "proxmox"
       template_name = "k8s-node-template"
       sockets       = "1"
       cores         = "2"
-      memory        = "2048"
+      memory        = "4096"
       disk_size     = "30G"
+      storage       = "external-storage"
     },
     "k8s-node-02" = {
-      target_node   = "proxmox"
-      template_name = "k8s-node-template"
+      target_node   = "proxmox-02"
+      template_name = "proxmox-02-k8s-node-01"
       sockets       = "1"
       cores         = "2"
-      memory        = "2048"
-      disk_size     = "30G"
+      memory        = "10240"
+      disk_size     = "35G"
+      storage       = "local-lvm"
+    },
+      "k8s-node-03" = {
+      target_node   = "proxmox-02"
+      template_name = "proxmox-02-k8s-node-01"
+      sockets       = "1"
+      cores         = "2"
+      memory        = "10240"
+      disk_size     = "35G"
+      storage       = "local-lvm"
     }
   }
 
-  source        = "../../../modules/proxmox_vm"
+  source        = "../../../../terraform/modules/proxmox_vm"
   providers     = { proxmox = proxmox }
   instance_name = each.key
   target_node   = each.value.target_node
@@ -55,5 +67,5 @@ module "k8s_instance" {
   cores         = each.value.cores
   memory        = each.value.memory
   disk_size     = each.value.disk_size
-  storage       = "external-storage"
+  storage       = each.value.storage
 }
