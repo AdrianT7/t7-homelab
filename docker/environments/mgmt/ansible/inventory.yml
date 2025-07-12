@@ -9,6 +9,7 @@ all:
 docker:
   hosts:
     docker-01.home.t7-lab.pl:
+    docker-02-db.home.t7-lab.pl:
   vars:
     docker_docker_version: "20.10.24+dfsg1-1+deb12u1+b1"
     docker_docker_compose_version: "1.29.2-3"
