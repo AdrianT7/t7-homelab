@@ -15,90 +15,9 @@ permissions:
   contents: read
 
 jobs:
-  terraform-plan:
-    name: Terraform plan
-    runs-on: [self-hosted, Linux, Proxmox]
-    environment: ${{ inputs.environment }}
-    env: 
-      TF_VAR_proxmox_api_token_secret: ${{ secrets.PROXMOX_TF_API_KEY }}
-      GOOGLE_APPLICATION_CREDENTIALS: gcp_tf_storage_sa_key.json
-    defaults:
-      run:
-        working-directory: zabbix_server/environments/${{ inputs.environment }}/terraform
-        shell: bash
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Set GCP credentials
-        run: |
-          echo "${{ secrets.GCP_TF_STORAGE_SA_KEY }}" | base64 --decode > gcp_tf_storage_sa_key.json
-
-      - name: Terraform Init
-        run: terraform init
-
-      - name: Terraform Plan
-        run: terraform plan --destroy -out=tfplan
-
-      - name: Save Plan Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: tfplan
-          path: zabbix_server/environments/${{ inputs.environment }}/terraform
-
-      - name: Cleanup GCP credentials
-        if: always()
-        run: rm -f gcp_tf_storage_sa_key.json
-  
-  approve-changes:
-    name: Approve Terraform plan
-    runs-on: [self-hosted, Linux, Proxmox]
-    needs: terraform-plan
-    environment: review
-    steps:
-      - name: Accept changes
-        run: echo "Changes has been accepted.."
-
-  terraform-destroy:
-    name: Destroy Terraform changes
-    runs-on: [self-hosted, Linux, Proxmox]
-    needs: approve-changes
-    environment: ${{ inputs.environment }}
-    env: 
-      TF_VAR_proxmox_api_token_secret: ${{ secrets.PROXMOX_TF_API_KEY }}
-      GOOGLE_APPLICATION_CREDENTIALS: gcp_tf_storage_sa_key.json
-    defaults:
-      run:
-        working-directory: zabbix_server/environments/${{ inputs.environment }}/terraform
-        shell: bash
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Set GCP credentials
-        run: |
-          echo "${{ secrets.GCP_TF_STORAGE_SA_KEY }}" | base64 --decode > gcp_tf_storage_sa_key.json
-
-      - name: Download Plan Artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: tfplan
-          path: zabbix_server/environments/${{ inputs.environment }}/terraform
-      
-      - name: Terraform init
-        run: terraform init
-
-      - name: Terraform destroy
-        run: terraform apply -auto-approve tfplan
-
-      - name: Cleanup GCP credentials
-        if: always()
-        run: rm -f gcp_tf_storage_sa_key.json
-
   ansible:
     name: Configure host
     runs-on: [self-hosted, Linux, Proxmox]
-    needs: terraform-destroy
     environment: ${{ inputs.environment }}
     env: 
       T7_SSH_USER:         "${{ secrets.T7_SSH_USER }}"
