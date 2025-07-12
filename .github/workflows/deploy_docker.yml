@@ -1,4 +1,4 @@
-name: Deploy Docker VMs
+name: Deploy Docker Instances
 on:
   workflow_dispatch:
     inputs:
@@ -102,6 +102,7 @@ jobs:
     env: 
       T7_SSH_USER:         ${{ secrets.T7_SSH_USER }}
       T7_SSH_PORT:         ${{ secrets.T7_SSH_PORT }}
+      T7_SSH_PORT_2:       ${{ secrets.T7_SSH_PORT_2 }}
       docker_hub_login:    ${{ secrets.DOCKER_HUB_LOGIN }}
       docker_hub_password: ${{ secrets.DOCKER_HUB_PASSWORD }}
       ANSIBLE_ROLES_PATH:  "${{ github.workspace }}/ansible/roles/"
