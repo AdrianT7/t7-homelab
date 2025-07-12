@@ -38,7 +38,7 @@ jobs:
         run: terraform init
 
       - name: Terraform Plan
-        run: terraform plan -out=tfplan
+        run: terraform plan --destroy -out=tfplan
 
       - name: Save Plan Artifact
         uses: actions/upload-artifact@v4
@@ -59,8 +59,8 @@ jobs:
       - name: Accept changes
         run: echo "Changes has been accepted.."
 
-  terraform-apply:
-    name: Apply Terraform changes
+  terraform-destroy:
+    name: Destroy Terraform changes
     runs-on: [self-hosted, Linux, Proxmox]
     needs: approve-changes
     environment: ${{ inputs.environment }}
@@ -88,8 +88,8 @@ jobs:
       - name: Terraform init
         run: terraform init
 
-      - name: Terraform apply
-        run: terraform apply -auto-approve tfplan
+      - name: Terraform destroy
+        run: terraform destroy -auto-approve tfplan
 
       - name: Cleanup GCP credentials
         if: always()
@@ -98,7 +98,7 @@ jobs:
   ansible:
     name: Configure host
     runs-on: [self-hosted, Linux, Proxmox]
-    needs: terraform-apply
+    needs: terraform-destroy
     environment: ${{ inputs.environment }}
     env: 
       T7_SSH_USER:         "${{ secrets.T7_SSH_USER }}"
