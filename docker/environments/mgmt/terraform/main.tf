@@ -31,3 +31,17 @@ module "docker_01_instance" {
   disk_size     = "16G"
   storage       = "external-storage"
 }
+
+module "docker_02_instance" {
+  source        = "../../../../terraform/modules/proxmox_vm"
+  providers     = { proxmox = proxmox }
+
+  instance_name = "docker-02-db"
+  target_node   = "proxmox-02"
+  template_name = "proxmox-02-debian-12-t7"
+  sockets       = "1"
+  cores         = "2"
+  memory        = "3064"
+  disk_size     = "35G"
+  storage       = "local-lvm"
+}
