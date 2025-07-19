@@ -15,6 +15,7 @@ gh_runner:
     gh_runner_docker_image: "adriant7/t7-gh-runner:latest@sha256:988a7f839ce2a446100e1d901612eceb1a36b8a195b16d6b396decf95bb67f18"
     gh_runner_docker_hub_login: "{{ lookup('env', 'docker_hub_login') }}"
     gh_runner_docker_hub_password: "{{ lookup('env', 'docker_hub_password') }}"
+    gh_runner_runner_labels: "{{ inventory_hostname.split('.')[0] }},self-hosted,Linux,Proxmox,Docker"
     service_verification_services:
       - docker
       - ssh

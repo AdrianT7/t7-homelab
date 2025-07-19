@@ -8,7 +8,7 @@
     mode: '0750'
 
 - name: Copy .env file
-  ansible.builtin.copy:
+  ansible.builtin.template:
     src: .env
     dest: "{{ gh_runner_docker_dir }}"
     owner: "{{ ansible_user }}"
