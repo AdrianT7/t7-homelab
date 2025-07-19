@@ -33,6 +33,6 @@ spec:
         - name: GH_RUNNER_WORK_DIR
           value: "_work"
         - name: GH_RUNNER_LABELS
-          value: "self-hosted,Linux,Proxmox"
+          value: "self-hosted,Linux,Proxmo,k8s"
       imagePullSecrets:
       - name: docker-hub-cred
