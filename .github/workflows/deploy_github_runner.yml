@@ -5,8 +5,11 @@ on:
     inputs:
       environment:
         description: Environment to execute the code against
-        type: environment
+        type: choice
+        options:
+          - mgmt
         required: true
+        default: mgmt
 
 permissions:
   contents: read
@@ -35,7 +38,7 @@ jobs:
         run: terraform init
 
       - name: Terraform Plan
-        run: terraform plan -out=tfplan
+        run: terraform plan -destroy -out=tfplan
 
       - name: Save Plan Artifact
         uses: actions/upload-artifact@v4
