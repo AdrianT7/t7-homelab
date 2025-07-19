@@ -9,6 +9,7 @@ all:
 gh_runner:
   hosts:
     docker-01.home.t7-lab.pl:
+    docker-02-db.home.t7-lab.pl:
   vars:
     gh_runner_docker_dir: "/home/{{ ansible_user }}/docker/gh_runner"
     gh_runner_docker_image: "adriant7/t7-gh-runner:latest@sha256:988a7f839ce2a446100e1d901612eceb1a36b8a195b16d6b396decf95bb67f18"
