@@ -1,0 +1,19 @@
+---
+all:
+  vars:
+    ansible_user: "{{ lookup('env', 'T7_SSH_USER') }}"
+    ansible_ssh_private_key_file: "~/.ssh/{{ ansible_user }}.key"
+    ansible_port: "{{ lookup('env', 'T7_SSH_PORT') }}"
+    become: true
+
+k8s:
+  hosts:
+    k8s-ctrl-plane-01.home.t7-lab.pl:
+    k8s-node-01.home.t7-lab.pl:
+    k8s-node-02.home.t7-lab.pl:
+    k8s-node-03.home.t7-lab.pl:
+  vars:
+    service_verification_services:
+      - ssh
+      - zabbix-agent
+...
