@@ -94,3 +94,36 @@ jobs:
       - name: Cleanup GCP credentials
         if: always()
         run: rm -f gcp_tf_storage_sa_key.json
+
+  ansible:
+    name: Configure host
+    runs-on: [self-hosted, Linux, Proxmox]
+    needs: terraform-apply
+    environment: ${{ inputs.environment }}
+    env: 
+      T7_SSH_USER:         ${{ secrets.T7_SSH_USER }}
+      T7_SSH_PORT:         ${{ secrets.T7_SSH_PORT }}
+      ANSIBLE_ROLES_PATH:  "${{ github.workspace }}/ansible/roles/"
+    defaults:
+      run:
+        working-directory: k8s/environments/${{ inputs.environment }}/ansible
+        shell: bash
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure SSH
+        run: | 
+          mkdir -p ~/.ssh 
+          echo "${{ secrets.T7_SSH_KEY }}" > ~/.ssh/${{ secrets.T7_SSH_USER }}.key
+          chmod 600 ~/.ssh/${{ secrets.T7_SSH_USER }}.key
+
+      - name: Run playbook
+        run: ansible-playbook -i inventory.yml prepare_k8s.yml --ssh-common-args='-o StrictHostKeyChecking=no'
+
+      - name: Cleanup ansible key
+        if: always()
+        run: |
+          if [[ -f ~/.ssh/${{ secrets.T7_SSH_USER }}.key ]]; then
+            rm ~/.ssh/${{ secrets.T7_SSH_USER }}.key
+          fi

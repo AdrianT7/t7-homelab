@@ -1,0 +1,8 @@
+---
+- name: Prepare k8s cluster
+  hosts: k8s
+  become: true
+  roles:
+    - zabbix-agent
+    - service_verification
+...
