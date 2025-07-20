@@ -18,7 +18,7 @@ jobs:
     environment: ${{ inputs.environment }}
     env: 
       T7_SSH_USER:         "${{ secrets.T7_SSH_USER }}"
-      T7_SSH_PORT:         "${{ secrets.T7_SSH_PORT }}"
+      T7_SSH_PORT_2:       "${{ secrets.T7_SSH_PORT_2 }}"
       ANSIBLE_ROLES_PATH:  "${{ github.workspace }}/ansible/roles/"
     defaults:
       run:

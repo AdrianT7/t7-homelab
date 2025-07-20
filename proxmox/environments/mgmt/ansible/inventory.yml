@@ -3,12 +3,13 @@ all:
   vars:
     ansible_user: "{{ lookup('env', 'T7_SSH_USER') }}"
     ansible_ssh_private_key_file: "~/.ssh/{{ ansible_user }}.key"
-    ansible_port: "{{ lookup('env', 'T7_SSH_PORT') }}"
+    ansible_port: "{{ lookup('env', 'T7_SSH_PORT_2') }}"
     become: true
 
 proxmox:
   hosts:
     proxmox-01.home.t7-lab.pl:
+    proxmox-02.home.t7-lab.pl:
   vars:
     service_verification_services:
       - ssh
