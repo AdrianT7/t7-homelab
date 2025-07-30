@@ -1,0 +1,68 @@
+---
+- name: Update Apt package index
+  ansible.builtin.apt:
+    update_cache: true
+
+- name: Install Nginx
+  ansible.builtin.apt:
+    name: nginx
+    state: present
+  notify: Reload Nginx
+
+- name: Copy Nginx configuration file
+  ansible.builtin.copy:
+    src: nginx.conf
+    dest: /etc/nginx/nginx.conf
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Reload Nginx
+
+- name: Create SSL directory
+  ansible.builtin.file:
+    path: /etc/nginx/ssl
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Copy SSL certificate
+  ansible.builtin.template:
+    src: fullchain.wildcard.home.t7-lab.pl.pem.j2
+    dest: /etc/nginx/ssl/fullchain.wildcard.home.t7-lab.pl.pem
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Reload Nginx
+
+- name: Copy SSL certificate key
+  ansible.builtin.template:
+    src: wildcard.home.t7-lab.pl.key.j2
+    dest: /etc/nginx/ssl/wildcard.home.t7-lab.pl.key
+    owner: root
+    group: root
+    mode: '0600'
+  notify: Reload Nginx
+
+- name: Copy sites-available
+  ansible.builtin.template:
+    src: "sites-available/{{ item }}.j2"
+    dest: "/etc/nginx/sites-available/{{ item }}"
+    owner: root
+    group: root
+    mode: '0644'
+  loop: "{{ nginx_sites }}"
+  when: nginx_sites is defined
+  notify: Reload Nginx
+
+- name: Create symlink for sites-enabled
+  ansible.builtin.file:
+    src: "/etc/nginx/sites-available/{{ item }}"
+    dest: "/etc/nginx/sites-enabled/{{ item }}"
+    state: link
+  loop: "{{ nginx_sites }}"
+  when: nginx_sites is defined
+  notify: Reload Nginx
+
+- meta: flush_handlers
+...

@@ -1,0 +1,20 @@
+---
+- name: Verify Nginx configuration
+  ansible.builtin.command: nginx -t
+  register: nginx_test
+  changed_when: false # don't mark as changed
+  failed_when: false  # don't fail the task if the test fails, next task will handle it
+  listen: "Reload Nginx"
+
+- name: Fail deployment if Nginx configuration is invalid
+  ansible.builtin.fail:
+    msg: "Nginx configuration test failed. Please fix the issues before proceeding."
+  when: nginx_test.rc != 0
+  listen: "Reload Nginx"
+
+- name: Reload Nginx service
+  ansible.builtin.service:
+    name: nginx
+    state: reloaded
+  listen: "Reload Nginx"
+...

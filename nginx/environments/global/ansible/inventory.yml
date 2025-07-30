@@ -1,0 +1,25 @@
+---
+all:
+  vars:
+    ansible_user: "{{ lookup('env', 'T7_SSH_USER') }}"
+    ansible_ssh_private_key_file: "~/.ssh/{{ ansible_user }}.key"
+    ansible_port: "{{ lookup('env', 'T7_SSH_PORT') }}"
+    become: true
+
+nginx:
+  hosts:
+    nginx-01.home.t7-lab.pl:
+  vars:
+    ssl_certificate_path: "/etc/nginx/ssl/fullchain.wildcard.home.t7-lab.pl.pem"
+    ssl_certificate_key_path: "/etc/nginx/ssl/wildcard.home.t7-lab.pl.key"
+
+    nginx_sites:
+      - zabbix-01
+
+    zabbix_server_name: "zabbix-server-01-gui.home.t7-lab.pl"
+    zabbix_server_01_proxy_pass: "http://zabbix-server-01.home.t7-lab.pl:80"
+
+    service_verification_services:
+      - nginx
+      - ssh
+...
