@@ -1,0 +1,9 @@
+---
+- name: Prepare NGINX
+  hosts: nginx
+  become: true
+  roles:
+    - nginx
+    - zabbix-agent
+    - service_verification
+...
