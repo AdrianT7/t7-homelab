@@ -118,9 +118,10 @@ jobs:
           chmod 600 ~/.ssh/${{ secrets.T7_SSH_USER }}.key
 
       - name: Copy and decode SSL certificates
+        working-directory: ansible/roles/nginx/templates
         run: |
-          echo "${{ secrets.FULLCHAIN_WILDCARD_HOME_T7_LAB_PL_PEM }}" | base64 --decode > ansible/roles/nginx/templates/fullchain.wildcard.home.t7-lab.pl.pem.j2
-          echo "${{ secrets.WILDCARD_HOME_T7_LAB_PL_KEY }}" | base64 --decode > ansible/roles/nginx/templates/wildcard.home.t7-lab.pl.key.j2
+          echo "${{ secrets.FULLCHAIN_WILDCARD_HOME_T7_LAB_PL_PEM }}" | base64 --decode > fullchain.wildcard.home.t7-lab.pl.pem.j2
+          echo "${{ secrets.WILDCARD_HOME_T7_LAB_PL_KEY }}" | base64 --decode > wildcard.home.t7-lab.pl.key.j2
 
       - name: Run playbook
         run: ansible-playbook -i inventory.yml prepare_nginx.yml --ssh-common-args='-o StrictHostKeyChecking=no'
