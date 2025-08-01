@@ -1,0 +1,31 @@
+services:
+  pihole:
+    container_name: pihole
+    image: pihole/pihole:2025.07.1
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "8080:80/tcp"
+    environment:
+      # Set the appropriate timezone for your location (https://en.wikipedia.org/wiki/List_of_tz_database_time_zones), e.g:
+      TZ: 'Europe/Warsaw'
+      FTLCONF_webserver_api_password: ${PIHOLE_API_PASSWORD}
+      # If using Docker's default `bridge` network setting the dns listening mode should be set to 'all'
+      FTLCONF_dns_listeningMode: 'all'
+      FTLCONF_dns_upstreams: '192.168.100.223#53'
+    volumes:
+      - '{{ pihole_db_dir }}:/etc/pihole'
+    # cap_add:
+      # See https://github.com/pi-hole/docker-pi-hole#note-on-capabilities
+      # Required if you are using Pi-hole as your DHCP server, else not needed
+      # - NET_ADMIN
+      # Required if you are using Pi-hole as your NTP client to be able to set the host's system time
+      # - SYS_TIME
+      # Optional, if Pi-hole should get some more processing time
+      # - SYS_NICE
+    networks: 
+      - pihole-network
+    restart: unless-stopped
+networks:
+  pihole-network:
+    driver: bridge

@@ -1,0 +1,8 @@
+---
+- name: Prepare pihole
+  hosts: pihole
+  become: true
+  roles:
+    - pihole
+    - service_verification
+...
