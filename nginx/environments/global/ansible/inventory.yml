@@ -22,10 +22,10 @@ nginx:
     zabbix_server_01_proxy_pass: "http://zabbix-server-01.home.t7-lab.pl:80"
 
     pihole_01_server_name: "pihole-01-gui.home.t7-lab.pl"
-    pihole_01_proxy_pass: "http://pihole-01.home.t7-lab.pl:8080/admin"
+    pihole_01_proxy_pass: "http://pihole-01.home.t7-lab.pl:8080/"
 
     pihole_02_server_name: "pihole-02-gui.home.t7-lab.pl"
-    pihole_02_proxy_pass: "http://pihole-02.home.t7-lab.pl:8080/admin"
+    pihole_02_proxy_pass: "http://pihole-02.home.t7-lab.pl:8080/"
 
     t7_dashboard_server_name: "t7-dashboard.home.t7-lab.pl"
 
