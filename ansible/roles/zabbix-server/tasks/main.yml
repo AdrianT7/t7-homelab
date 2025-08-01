@@ -11,8 +11,8 @@
   ansible.builtin.file:
     path: "{{ zabbix_server_docker_dir }}/zabbix-db/"
     state: directory
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
+    owner: "999" # mysql user
+    group: "systemd-journal"
     mode: '0750'
 
 - name: Copy .env file
