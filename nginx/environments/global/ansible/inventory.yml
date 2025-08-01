@@ -27,7 +27,7 @@ nginx:
     pihole_02_server_name: "pihole-02-gui.home.t7-lab.pl"
     pihole_02_proxy_pass: "http://pihole-02.home.t7-lab.pl:8080/admin"
 
-    t7-dashboard_server_name: "t7-dashboard.home.t7-lab.pl"
+    t7_dashboard_server_name: "t7-dashboard.home.t7-lab.pl"
 
     service_verification_services:
       - nginx

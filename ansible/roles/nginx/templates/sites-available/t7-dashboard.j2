@@ -2,7 +2,7 @@ server {
   listen 443 ssl;
   root /var/www/html/t7-dashboard;
   index index.html;
-  server_name t7-dashboard.home.t7-lab.pl;
+  server_name {{ t7_dashboard_server_name }};
 
   ssl_certificate     {{ ssl_certificate_path }};
   ssl_certificate_key {{ ssl_certificate_key_path }};
