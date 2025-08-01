@@ -1,0 +1,21 @@
+---
+all:
+  vars:
+    ansible_user: "{{ lookup('env', 'T7_SSH_USER') }}"
+    ansible_ssh_private_key_file: "~/.ssh/{{ ansible_user }}.key"
+    ansible_port: "{{ lookup('env', 'T7_SSH_PORT') }}"
+    pihole_api_password: "{{ lookup('env', 'PIHOLE_API_PASSWORD') }}"
+    become: true
+
+pihole:
+  hosts:
+    docker-02-db.home.t7-lab.pl:
+    docker-03.home.t7-lab.pl:
+      ansible_port: "{{ lookup('env', 'T7_SSH_PORT_2') }}"
+  vars:
+    pihole_docker_dir: "/home/{{ ansible_user }}/docker/pihole"
+    pihole_db_dir: ".{{ pihole_docker_dir }}/pihole-db"
+    service_verification_services:
+      - docker
+      - ssh
+...

@@ -1,0 +1,39 @@
+---
+- name: Create directory for pihole files
+  ansible.builtin.file:
+    path: "{{ pihole_docker_dir }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: '0750'
+
+- name: Create directory for pihole db
+  ansible.builtin.file:
+    path: "{{ pihole_db_dir }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: '0750'
+
+- name: Copy .env file
+  ansible.builtin.template:
+    src: .env
+    dest: "{{ pihole_docker_dir }}"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: '0640'
+
+- name: Copy docker-compose file
+  ansible.builtin.template:
+    src: docker-compose.yml
+    dest: "{{ pihole_docker_dir}}"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: '0640'
+
+- name: Deploy pihole
+  ansible.builtin.command:
+    chdir: "{{ pihole_docker_dir }}"
+    cmd: "docker-compose up -d"
+  become: false
+...
