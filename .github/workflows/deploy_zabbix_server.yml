@@ -22,8 +22,6 @@ jobs:
     env: 
       T7_SSH_USER:         "${{ secrets.T7_SSH_USER }}"
       T7_SSH_PORT:         "${{ secrets.T7_SSH_PORT }}"
-      docker_hub_login:    "${{ secrets.DOCKER_HUB_LOGIN }}"
-      docker_hub_password: "${{ secrets.DOCKER_HUB_PASSWORD }}"
       MYSQL_PASSWORD:      "${{ secrets.MYSQL_ZABBIX_PASSWORD }}"
       MYSQL_ROOT_PASSWORD: "${{ secrets.MYSQL_ROOT_PASSWORD }}"
       ANSIBLE_ROLES_PATH:  "${{ github.workspace }}/ansible/roles/"
