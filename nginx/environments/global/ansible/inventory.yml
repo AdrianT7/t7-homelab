@@ -15,6 +15,7 @@ nginx:
 
     nginx_sites:
       - zabbix-01
+      - t7-dashboard
 
     zabbix_server_name: "zabbix-server-01-gui.home.t7-lab.pl"
     zabbix_server_01_proxy_pass: "http://zabbix-server-01.home.t7-lab.pl:80"
