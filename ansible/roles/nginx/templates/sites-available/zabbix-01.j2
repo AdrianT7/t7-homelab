@@ -1,16 +1,16 @@
 server {
-    listen              443 ssl;
-    index               index.php;
-    server_name         {{ zabbix_server_name }};
+  listen              443 ssl;
+  index               index.php;
+  server_name         {{ zabbix_server_name }};
 
-    ssl_certificate     {{ ssl_certificate_path }};
-    ssl_certificate_key {{ ssl_certificate_key_path }};
-    ssl_protocols       TLSv1.2 TLSv1.3;
-    ssl_ciphers         HIGH:!aNULL:!MD5; 
+  ssl_certificate     {{ ssl_certificate_path }};
+  ssl_certificate_key {{ ssl_certificate_key_path }};
+  ssl_protocols       TLSv1.2 TLSv1.3;
+  ssl_ciphers         HIGH:!aNULL:!MD5; 
 
-    location / {
-      proxy_set_header Host $host;
-      proxy_set_header X-Real-IP $remote_addr;
-      proxy_pass       {{ zabbix_server_01_proxy_pass }};
-    }
+  location / {
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_pass       {{ zabbix_server_01_proxy_pass }};
+  }
 }

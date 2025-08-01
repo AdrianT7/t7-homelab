@@ -1,0 +1,15 @@
+server {
+  listen 443 ssl;
+  root /var/www/html/t7-dashboard;
+  index index.html;
+  server_name t7-dashboard.home.t7-lab.pl;
+
+  ssl_certificate     {{ ssl_certificate_path }};
+  ssl_certificate_key {{ ssl_certificate_key_path }};
+  ssl_protocols       TLSv1.2 TLSv1.3;
+  ssl_ciphers         HIGH:!aNULL:!MD5; 
+  
+  location / {
+    try_files $uri $uri/ =404;
+  }
+}
