@@ -80,7 +80,7 @@ jobs:
           echo "${{ secrets.GCP_TF_STORAGE_SA_KEY }}" | base64 --decode > gcp_tf_storage_sa_key.json
 
       - name: Download Plan Artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: tfplan
           path: k8s/environments/${{ inputs.environment }}/terraform
