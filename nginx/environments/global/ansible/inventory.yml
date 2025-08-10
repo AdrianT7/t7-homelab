@@ -17,6 +17,7 @@ nginx:
       - zabbix-01
       - t7-dashboard
       - pihole
+      - k8s-dashboard
 
     zabbix_server_name: "zabbix-server-01-gui.home.t7-lab.pl"
     zabbix_server_01_proxy_pass: "http://zabbix-server-01.home.t7-lab.pl:80"
@@ -28,6 +29,9 @@ nginx:
     pihole_02_proxy_pass: "http://pihole-02.home.t7-lab.pl:8080/"
 
     t7_dashboard_server_name: "t7-dashboard.home.t7-lab.pl"
+
+    k8s_dashboard_server_name: "k8s-dashboard-gui.home.t7-lab.pl"
+    k8s_dashboard_proxy_pass: "http://k8s-dashboard.home.t7-lab.pl:80"
 
     service_verification_services:
       - nginx
