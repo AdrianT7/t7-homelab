@@ -1,0 +1,29 @@
+labels:
+  app: gh-runner
+
+namespace: gh-runner
+
+containers:
+  replicas: 1
+  image: adriant7/gh-runner
+  imageTag: 1.4.0
+  github_repository: "https://github.com/user/repository" # replace with your github repository
+  github_runner_group: "default"
+  github_runner_workdir: "_work"
+  github_runner_labels: "self-hosted,Linux,helm"
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+imagePullSecrets:
+  enabled: false
+  name: docker-hub-cred
+  dockerconfigjson: "" # base64 encoded dockerconfigjson content
+
+gh_runner_token:
+  name: gh-runner-token
+  value: "" # base64 encoded GitHub Runner token

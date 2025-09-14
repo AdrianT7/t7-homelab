@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ .Values.gh_runner_token.name }}
+  namespace: {{ .Values.namespace }}
+type: Opaque
+data:
+  GH_RUNNER_TOKEN: {{ .Values.gh_runner_token.value | quote }}
