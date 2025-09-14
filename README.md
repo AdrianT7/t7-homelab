@@ -18,6 +18,7 @@ It manages the deployment, configuration, and lifecycle of a self-hosted homelab
 - **GCP (Google Cloud Platform)**: Remote state storage and optional cloud resources.
 - **Proxmox**: On-premises virtualization platform for VM management (two nodes and third corosync device to ensure quorum).
 - **Kaniko**: Container image builds without a Docker daemon, used in [gh-runner](https://github.com/AdrianT7/gh-runner) for building GitHub Actions runner images.
+- **Helm**: Kubernetes package manager for deploying and managing applications using charts, simplifying repeatable installations (e.g., GitHub Actions runners, monitoring tools).
 
 
 ## Other technologies and deployments
@@ -37,6 +38,7 @@ It manages the deployment, configuration, and lifecycle of a self-hosted homelab
 ├── gcp_storage/            # GCP storage bucket provisioning (Terraform)
 ├── gcp_tf_backend/         # GCP backend for Terraform state (Terraform)
 ├── github_runner/          # GitHub Actions self-hosted runner setup (Terraform & Ansible)
+├── helm/                   # Helm charts directory
 ├── k8s/                    # Kubernetes cluster and runners deployment (Terraform & manifests)
 ├── nginx/                  # NGINX VM and configuration (Terraform & Ansible)
 ├── pihole/                 # Pi-hole deployment (Terraform & Ansible)
@@ -72,6 +74,11 @@ It manages the deployment, configuration, and lifecycle of a self-hosted homelab
 - **gh-runner** ([GitHub](https://github.com/AdrianT7/gh-runner))  
   This repo builds GitHub Actions self-hosted runner images using **Kaniko**.  
   Docker images of my runners are available on [Docker Hub](https://hub.docker.com/repository/docker/adriant7/gh-runner/) for use in your own infrastructure.
+
+- **helm-charts** 
+  ([Helm repository](https://adriant7.github.io/helm-charts/))
+  ([GitHub repository](https://github.com/AdrianT7/helm-charts))
+  Public repository hosting Helm charts for multiple projects, including `gh-runner`
 
 ## License
 
