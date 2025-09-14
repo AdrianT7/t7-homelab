@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Values.labels.app }}
+  name: {{ .Release.Name | lower }}-deployment
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: {{ .Values.containers.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.labels.app }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.labels.app }}
+    spec:
+      containers:
+      - name: {{ .Release.Name | lower }}-container
+        image: {{ .Values.containers.image }}:{{ .Values.containers.imageTag }}
+        env:
+        - name: GH_RUNNER_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.gh_runner_token.name }}
+              key: GH_RUNNER_TOKEN
+        - name: GH_REPO_URL
+          value: {{ .Values.containers.github_repository | lower | quote }}
+        - name: GH_RUNNER_NAME
+          value: ""
+        - name: GH_RUNNER_GROUP
+          value: {{ .Values.containers.github_runner_group | lower | quote }}
+        - name: GH_RUNNER_WORK_DIR
+          value: {{ .Values.containers.github_runner_workdir | lower | quote }}
+        - name: GH_RUNNER_LABELS
+          value: {{ .Values.containers.github_runner_labels | lower | quote }}
+      resources:
+        requests:
+          cpu: {{ .Values.containers.resources.requests.cpu }}
+          memory: {{ .Values.containers.resources.requests.memory }}
+        limits:
+          cpu: {{ .Values.containers.resources.limits.cpu }}
+          memory: {{ .Values.containers.resources.limits.memory }}
+{{- if .Values.imagePullSecrets.enabled }}
+      imagePullSecrets:
+      - name: docker-hub-cred
+{{- end }}
