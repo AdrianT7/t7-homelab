@@ -1,6 +1,3 @@
-labels:
-  app: gh-runner
-
 namespace:
   create: false
   name: gh-runner
