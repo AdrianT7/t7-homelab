@@ -32,14 +32,15 @@ A Helm chart for deploying a self-hosted GitHub Actions runner.
 
 See [`values.yaml`] for all available options.
 
-| Parameter                           | Description                                 | Default                        |
-|-------------------------------------|---------------------------------------------|--------------------------------|
-| `namespace`                         | Namespace to deploy runner                  | `gh-runner`               |
-| `containers.image`                  | Runner container image                      | `adriant7/gh-runner`           |
-| `containers.github_repository`      | GitHub repository URL                       | *(set your repo)*              |
-| `gh_runner_token.value`             | Base64 GitHub Runner token                  | `""`                           |
-| `imagePullSecrets.enabled`          | Enable Docker registry secret               | `false`                        |
-| `imagePullSecrets.dockerconfigjson` | Base64 dockerconfigjson                     | `""`                           |
+| Parameter                           | Description                                 | Default                          |
+|-------------------------------------|---------------------------------------------|----------------------------------|
+| `namespace.name`                    | Namespace to deploy runner                  | `gh-runner` (disabled by default)|
+| `namespace.create`                  | Namespace to deploy runner                  | `false`                          |
+| `containers.image`                  | Runner container image                      | `adriant7/gh-runner`             |
+| `containers.github_repository`      | GitHub repository URL                       | *(set your repo)*                |
+| `gh_runner_token.value`             | Base64 GitHub Runner token                  | `""`                             |
+| `imagePullSecrets.enabled`          | Enable Docker registry secret               | `false`                          |
+| `imagePullSecrets.dockerconfigjson` | Base64 dockerconfigjson                     | `""`                             |
 
 **Mandatory variables**
 - `containers.github_repository`
@@ -54,7 +55,6 @@ If you set namespace in `values.yaml`, it must match the namespace you pass with
 
 ```yaml
 gh_runner_token:
-  name: gh-runner-token
   value: "<base64-github-token>"
 
 containers:
