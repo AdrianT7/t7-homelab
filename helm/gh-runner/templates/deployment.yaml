@@ -2,27 +2,29 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: {{ .Values.labels.app }}
-  name: {{ .Release.Name | lower }}-deployment
-  namespace: {{ .Values.namespace }}
+    {{- include "gh-runner.labels" . | nindent 4 }}
+  name: {{ include "gh-runner.fullname" . }}-deployment
+  {{- if .Values.namespace.create }}
+  namespace: {{ .Values.namespace.name }}
+  {{- end }}
 spec:
   replicas: {{ .Values.containers.replicas }}
   selector:
     matchLabels:
-      app: {{ .Values.labels.app }}
+      {{- include "gh-runner.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        app: {{ .Values.labels.app }}
+        {{- include "gh-runner.selectorLabels" . | nindent 8 }}
     spec:
       containers:
-      - name: {{ .Release.Name | lower }}-container
+      - name: {{ include "gh-runner.name" . }}
         image: {{ .Values.containers.image }}:{{ .Values.containers.imageTag }}
         env:
         - name: GH_RUNNER_TOKEN
           valueFrom:
             secretKeyRef:
-              name: {{ .Values.gh_runner_token.name }}
+              name: {{ include "gh-runner.fullname" . }}-token
               key: GH_RUNNER_TOKEN
         - name: GH_REPO_URL
           value: {{ .Values.containers.github_repository | lower | quote }}
@@ -41,7 +43,7 @@ spec:
         limits:
           cpu: {{ .Values.containers.resources.limits.cpu }}
           memory: {{ .Values.containers.resources.limits.memory }}
-{{- if .Values.imagePullSecrets.enabled }}
+      {{- if .Values.imagePullSecrets.enabled }}
       imagePullSecrets:
-      - name: docker-hub-cred
-{{- end }}
+        - name: {{ include "gh-runner.fullname" . }}-image-pull-secret
+      {{- end }}

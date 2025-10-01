@@ -1,7 +1,9 @@
 labels:
   app: gh-runner
 
-namespace: gh-runner
+namespace:
+  create: false
+  name: gh-runner
 
 containers:
   replicas: 1
@@ -21,9 +23,7 @@ containers:
 
 imagePullSecrets:
   enabled: false
-  name: docker-hub-cred
   dockerconfigjson: "" # base64 encoded dockerconfigjson content
 
 gh_runner_token:
-  name: gh-runner-token
   value: "" # base64 encoded GitHub Runner token
