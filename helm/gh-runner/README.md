@@ -17,15 +17,21 @@ A Helm chart for deploying a self-hosted GitHub Actions runner.
 
 ## Installation
 
-1. **Prepare your values:**
-   Edit [`values.yaml`](helm/gh-runner/values.yaml) and set:
+1. **Get repository**
+  ```sh
+  helm repo add t7-helm-charts https://adriant7.github.io/helm-charts
+  helm repo update
+  ```
+
+2. **Prepare your values:**
+   Edit [`values.yaml`](./values.yaml) and set:
    - `gh_runner_token.value`: Base64-encoded GitHub Runner token
    - `containers.github_repository`: Your GitHub repository URL
    - Optionally adjust image, labels, resources, etc.
 
-2. **Install the chart:**
+3. **Install the chart:**
    ```sh
-   helm install helm-gh-runner <path_to_chart>
+   helm install self-hosted-runner t7-helm-charts/gh-runner-chart -n gh-runner
    ```
 
 ## Configuration
