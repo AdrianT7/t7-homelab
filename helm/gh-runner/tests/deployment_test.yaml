@@ -1,0 +1,96 @@
+suite: Deployment manifest
+
+templates:
+  - templates/deployment.yaml
+
+tests:
+  - it: should render Deployment with correct name and namespace
+    set:
+      namespace:
+        create: true
+        name: "custom-ns"
+    asserts:
+      - equal:
+          path: metadata.name
+          value: "RELEASE-NAME-gh-runner-deployment"
+      - equal:
+          path: metadata.namespace
+          value: "custom-ns"
+
+  - it: should set container image and tag
+    set:
+      containers:
+        image: "adriant7/gh-runner"
+        imageTag: "1.4.0"
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: "adriant7/gh-runner:1.4.0"
+
+  - it: should set environment variables from values
+    set:
+      containers:
+        github_repository: "https://github.com/test/repo"
+        github_runner_group: "testgroup"
+        github_runner_workdir: "workdir"
+        github_runner_labels: "label1,label2"
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].env[1].name
+          value: "GH_REPO_URL"
+      - equal:
+          path: spec.template.spec.containers[0].env[1].value
+          value: "https://github.com/test/repo"
+      - equal:
+          path: spec.template.spec.containers[0].env[3].name
+          value: "GH_RUNNER_GROUP"
+      - equal:
+          path: spec.template.spec.containers[0].env[3].value
+          value: "testgroup"
+      - equal:
+          path: spec.template.spec.containers[0].env[4].name
+          value: "GH_RUNNER_WORK_DIR"
+      - equal:
+          path: spec.template.spec.containers[0].env[4].value
+          value: "workdir"
+      - equal:
+          path: spec.template.spec.containers[0].env[5].name
+          value: "GH_RUNNER_LABELS"
+      - equal:
+          path: spec.template.spec.containers[0].env[5].value
+          value: "label1,label2"
+
+  - it: should set resources from values
+    set:
+      containers:
+        resources:
+          requests:
+            cpu: "200m"
+            memory: "256Mi"
+          limits:
+            cpu: "1"
+            memory: "1Gi"
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].resources.requests.cpu
+          value: "200m"
+      - equal:
+          path: spec.template.spec.containers[0].resources.requests.memory
+          value: "256Mi"
+      - equal:
+          path: spec.template.spec.containers[0].resources.limits.cpu
+          value: "1"
+      - equal:
+          path: spec.template.spec.containers[0].resources.limits.memory
+          value: "1Gi"
+
+  - it: should add imagePullSecrets if enabled
+    set:
+      imagePullSecrets:
+        enabled: true
+    asserts:
+      - exists:
+          path: spec.template.spec.imagePullSecrets
+      - equal:
+          path: spec.template.spec.imagePullSecrets[0].name
+          value: "RELEASE-NAME-gh-runner-image-pull-secret"

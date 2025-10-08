@@ -1,0 +1,36 @@
+suite: gh-runner-token Secret
+
+templates:
+  - templates/gh-runner-token.yaml
+
+tests:
+  - it: should render Secret with correct name and namespace
+    set:
+      namespace:
+        create: true
+        name: "custom-ns"
+      gh_runner_token:
+        value: "sometoken"
+    asserts:
+      - equal:
+          path: metadata.name
+          value: "RELEASE-NAME-gh-runner-token"
+      - equal:
+          path: metadata.namespace
+          value: "custom-ns"
+      - equal:
+          path: data.GH_RUNNER_TOKEN
+          value: "sometoken"
+
+  - it: should not set namespace if not created
+    set:
+      namespace:
+        create: false
+      gh_runner_token:
+        value: "othertoken"
+    asserts:
+      - notExists:
+          path: metadata.namespace
+      - equal:
+          path: data.GH_RUNNER_TOKEN
+          value: "othertoken"
