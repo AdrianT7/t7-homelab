@@ -47,7 +47,6 @@ It manages the deployment, configuration, and lifecycle of a self-hosted homelab
 ├── terraform/              # Shared Terraform modules (e.g., Proxmox VM)
 ├── zabbix_server/          # Zabbix server deployment (Terraform & Ansible)
 ├── .github/workflows/      # GitHub Actions CI/CD workflows
-├── .vscode/                # VSCode workspace settings
 ├── LICENSE                 # MIT License
 ├── renovate.json           # Renovate configuration for dependency updates
 └── .gitignore              # Git ignore rules
