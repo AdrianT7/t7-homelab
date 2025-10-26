@@ -75,7 +75,7 @@ It manages the deployment, configuration, and lifecycle of a self-hosted homelab
   Docker images of my runners are available on [Docker Hub](https://hub.docker.com/repository/docker/adriant7/gh-runner/) for use in your own infrastructure.
 
 - **helm-charts** 
-  ([Helm repository](https://adriant7.github.io/helm-charts/))
+  ([Helm repository](https://adriant7.github.io/helm-charts/index.yaml))
   ([GitHub repository](https://github.com/AdrianT7/helm-charts))
   Public repository hosting Helm charts for multiple projects, including `gh-runner`
 
