@@ -12,7 +12,7 @@ uptime_kuma:
 #    docker-02-db.home.t7-lab.pl:
   vars:
     uptime_kuma_docker_dir: "/home/{{ ansible_user }}/docker/uptime-kuma"
-    uptime_kuma_db_dir: "/{{ uptime_kuma_docker_dir }}/uptime-kuma-data"
+    uptime_kuma_db_dir: "{{ uptime_kuma_docker_dir }}/uptime-kuma-data"
     service_verification_services:
       - docker
       - ssh
