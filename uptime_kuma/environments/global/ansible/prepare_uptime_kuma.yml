@@ -1,0 +1,7 @@
+---
+- name: Prepare uptime-kuma
+  hosts: uptime_kuma
+  roles:
+    - uptime_kuma
+    - service_verification
+...

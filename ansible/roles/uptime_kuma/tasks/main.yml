@@ -1,0 +1,31 @@
+---
+- name: Create directory for uptime_kuma files
+  ansible.builtin.file:
+    path: "{{ uptime_kuma_docker_dir }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: '0750'
+
+- name: Create directory for uptime_kuma db
+  ansible.builtin.file:
+    path: "{{ uptime_kuma_db_dir }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: '0750'
+
+- name: Copy docker-compose file
+  ansible.builtin.template:
+    src: docker-compose.yml
+    dest: "{{ uptime_kuma_docker_dir}}"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: '0640'
+
+- name: Deploy uptime_kuma
+  ansible.builtin.command:
+    chdir: "{{ uptime_kuma_docker_dir }}"
+    cmd: "docker-compose up -d"
+  become: false
+...
