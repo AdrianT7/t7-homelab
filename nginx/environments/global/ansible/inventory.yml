@@ -18,6 +18,13 @@ nginx:
       - t7-dashboard
       - pihole
       - k8s-dashboard
+      - uptime-kuma
+
+    # Test environment
+    uptime_kuma_01_test_server_name: "uptime-kuma-gui.test.home.t7-lab.pl"
+    uptime_kuma_01_test_proxy_pass: "http://uptime-kuma.test.home.t7-lab.pl:3001"
+
+    # Global / Prod / MGMT environment
 
     zabbix_server_name: "zabbix-server-01-gui.home.t7-lab.pl"
     zabbix_server_01_proxy_pass: "http://zabbix-server-01.home.t7-lab.pl:80"
@@ -32,6 +39,9 @@ nginx:
 
     k8s_dashboard_server_name: "k8s-dashboard-gui.home.t7-lab.pl"
     k8s_dashboard_proxy_pass: "http://k8s-dashboard.home.t7-lab.pl:80"
+
+    uptime_kuma_01_server_name: "uptime-kuma-gui.home.t7-lab.pl"
+    uptime_kuma_01_proxy_pass: "http://uptime-kuma.home.t7-lab.pl:3001"
 
     service_verification_services:
       - nginx
