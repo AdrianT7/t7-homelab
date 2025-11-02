@@ -25,6 +25,7 @@ It manages the deployment, configuration, and lifecycle of a self-hosted homelab
 
 - **pihole/**: Network-wide ad-blocking with Pi-hole.
 - **zabbix_server/**: Monitoring with Zabbix.
+- **uptime_kuma**: Monitoring with Uptime-kuma.
 - **k8s-dashboard/**: Dashboard for k8s management.
 - **gcp_storage/**, **gcp_tf_backend/**: GCP buckets for storage and Terraform state.
 - **bind9**: Authoritative DNS server.
@@ -41,11 +42,12 @@ It manages the deployment, configuration, and lifecycle of a self-hosted homelab
 ├── helm/                   # Helm charts directory
 ├── k8s/                    # Kubernetes cluster and runners deployment (Terraform & manifests)
 ├── nginx/                  # NGINX VM and configuration (Terraform & Ansible)
-├── pihole/                 # Pi-hole deployment (Terraform & Ansible)
+├── pihole/                 # Pi-hole deployment (Docker & Ansible)
 ├── proxmox/                # Proxmox node configuration (Ansible)
 ├── t7-dns/                 # DNS VM deployment (Terraform & Ansible)
 ├── terraform/              # Shared Terraform modules (e.g., Proxmox VM)
-├── zabbix_server/          # Zabbix server deployment (Terraform & Ansible)
+├── uptime_kuma/            # Uptime-kuma deployment (Docker & Ansible)
+├── zabbix_server/          # Zabbix server deployment (Docker & Ansible)
 ├── .github/workflows/      # GitHub Actions CI/CD workflows
 ├── LICENSE                 # MIT License
 ├── renovate.json           # Renovate configuration for dependency updates
