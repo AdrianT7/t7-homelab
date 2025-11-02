@@ -26,7 +26,7 @@ jobs:
       ANSIBLE_ROLES_PATH:  "${{ github.workspace }}/ansible/roles/"
     defaults:
       run:
-        working-directory: uptime-kuma/environments/${{ inputs.environment }}/ansible
+        working-directory: uptime_kuma/environments/${{ inputs.environment }}/ansible
         shell: bash
     steps:
       - name: Checkout
