@@ -8,7 +8,7 @@ all:
 
 uptime_kuma:
   hosts:
-    docker-02-db.home.t7-lab.pl:
+    docker-01.home.t7-lab.pl:
   vars:
     uptime_kuma_docker_dir: "/home/{{ ansible_user }}/docker/uptime-kuma"
     uptime_kuma_db_dir: "{{ uptime_kuma_docker_dir }}/uptime-kuma-data"
