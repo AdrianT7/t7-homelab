@@ -7,9 +7,15 @@ on:
         description: Environment to execute the code against
         type: choice
         options:
+          - test
           - global
         required: true
-        default: global
+        default: test
+
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - main
         
 permissions:
   contents: read
@@ -18,17 +24,22 @@ jobs:
   ansible:
     name: Configure host
     runs-on: [self-hosted, Linux, Proxmox]
-    environment: ${{ inputs.environment }}
-    env: 
+    environment: "${{ github.event_name == 'workflow_dispatch' && github.event.inputs.environment || 'test' }}"
+    env:
+      ENVIRONMENT:         "${{ github.event_name == 'workflow_dispatch' && github.event.inputs.environment || 'test' }}"
       T7_SSH_USER:         "${{ secrets.T7_SSH_USER }}"
       T7_SSH_PORT:         "${{ secrets.T7_SSH_PORT }}"
       T7_SSH_PORT_2:       "${{ secrets.T7_SSH_PORT_2 }}"
       ANSIBLE_ROLES_PATH:  "${{ github.workspace }}/ansible/roles/"
     defaults:
       run:
-        working-directory: uptime_kuma/environments/${{ inputs.environment }}/ansible
         shell: bash
     steps:
+      - name: Show which environment is used
+        run: |
+          echo "Triggered by: ${{ github.event_name }}"
+          echo "Environment: $ENVIRONMENT"
+        
       - name: Checkout
         uses: actions/checkout@v5
 
@@ -39,7 +50,16 @@ jobs:
           chmod 600 ~/.ssh/${{ secrets.T7_SSH_USER }}.key
 
       - name: Run playbook
-        run: ansible-playbook -i inventory.yml prepare_uptime_kuma.yml --ssh-common-args='-o StrictHostKeyChecking=no'
+        run: |
+          deployment_dir="uptime_kuma/environments/$ENVIRONMENT/ansible"
+          if [[ -d "$deployment_dir" ]]; then
+            cd "$deployment_dir"
+            ansible-playbook -i inventory.yml prepare_uptime_kuma.yml --ssh-common-args='-o StrictHostKeyChecking=no'
+          else
+            echo "Current directory: $(pwd)"
+            echo "Can't switch directory: $deployment_dir - it doesn't exist."
+            exit 1
+          fi
 
       - name: Cleanup ansible key
         if: always()
