@@ -35,7 +35,7 @@ services:
     depends_on:
       - mariadb-server
   zabbix-frontend:
-    image: zabbix/zabbix-web-nginx-mysql:7.0.15-ubuntu
+    image: zabbix/zabbix-web-nginx-mysql:7.4.5-ubuntu
     environment:
       - ZBX_SERVER_HOST=${ZBX_SERVER_HOST}
       - DB_SERVER_HOST=${DB_SERVER_HOST}
