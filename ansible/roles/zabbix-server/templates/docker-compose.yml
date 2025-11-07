@@ -18,7 +18,7 @@ services:
       replicas: 1
     privileged: false
   zabbix-server:
-    image: zabbix/zabbix-server-mysql:7.0.15-ubuntu
+    image: zabbix/zabbix-server-mysql:7.4.5-ubuntu
     ports:
       - 10051:10051
     environment:
