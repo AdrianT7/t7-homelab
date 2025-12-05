@@ -30,21 +30,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v5
-
-        # TODO: Remove debug step once confirmed working
-      - name: Debug repo layout
-        run: |
-          echo "Current: working directory $(pwd)"
-          echo "GITHUB_WORKSPACE=$GITHUB_WORKSPACE"
-          ls -la
-          ls -la "$GITHUB_WORKSPACE"
-          ls -la "$GITHUB_WORKSPACE/artifact_registry"
       
       - name: Prepare terraform.tfvars
         run: |
-          sed -i "s/gcp_project_id/${{ secrets.GCP_PROJECT_ID }}/g" terraform.tfvars
-          sed -i "s/impersonate_service_account/${{ secrets.GCP_REGISTRY_SA }}/g" terraform.tfvars
-          sleep 600
+          sed -i "s/sed_gcp_project_id/${{ secrets.GCP_PROJECT_ID }}/g" terraform.tfvars
+          sed -i "s/sed_impersonate_service_account/${{ secrets.GCP_REGISTRY_SA }}/g" terraform.tfvars
   
   terraform-plan:
     name: Terraform plan
