@@ -30,6 +30,15 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v5
+
+        # TODO: Remove debug step once confirmed working
+      - name: Debug repo layout
+        run: |
+          echo "Current: working directory $(pwd)"
+          echo "GITHUB_WORKSPACE=$GITHUB_WORKSPACE"
+          ls -la
+          ls -la "$GITHUB_WORKSPACE"
+          ls -la "$GITHUB_WORKSPACE/artifact_registry"
       
       - name: Prepare terraform.tfvars
         run: |
