@@ -28,6 +28,9 @@ jobs:
         working-directory: ${{ env.tf_code_directory }}
         shell: bash
     steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+      
       - name: Prepare terraform.tfvars
         run: |
           sed -i "s/gcp_project_id/${{ secrets.GCP_PROJECT_ID }}/g" artifact_registry/environments/${{ inputs.environment }}/terraform/terraform.tfvars
@@ -36,6 +39,7 @@ jobs:
   terraform-plan:
     name: Terraform plan
     runs-on: [self-hosted, Linux, Proxmox]
+    needs: prepare-project
     environment: ${{ inputs.environment }}
     env: 
       GOOGLE_APPLICATION_CREDENTIALS: gcp_tf_sa_key.json
