@@ -1,0 +1,112 @@
+name: Deploy GCP Artifact Registry
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Environment to execute the code against
+        type: choice
+        options:
+          - global
+        required: true
+        default: global
+
+permissions:
+  contents: read
+
+env:
+  tf_code_directory: artifact_registry/environments/${{ inputs.environment }}/terraform
+
+jobs:
+
+  prepare-project:
+    name: Prepare project
+    runs-on: [self-hosted, Linux, Proxmox]
+    environment: ${{ inputs.environment }}
+    defaults:
+      run:
+        working-directory: ${{ env.tf_code_directory }}
+        shell: bash
+    steps:
+      - name: Prepare terraform.tfvars
+        run: |
+          sed -i "s/gcp_project_id/${{ secrets.GCP_PROJECT_ID }}/g" artifact_registry/environments/${{ inputs.environment }}/terraform/terraform.tfvars
+          sed -i "s/impersonate_service_account/${{ secrets.GCP_REGISTRY_SA }}/g" artifact_registry/environments/${{ inputs.environment }}/terraform/terraform.tfvars
+  
+  terraform-plan:
+    name: Terraform plan
+    runs-on: [self-hosted, Linux, Proxmox]
+    environment: ${{ inputs.environment }}
+    env: 
+      GOOGLE_APPLICATION_CREDENTIALS: gcp_tf_sa_key.json
+    defaults:
+      run:
+        working-directory: ${{ env.tf_code_directory }}
+        shell: bash
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set GCP credentials
+        run: |
+          echo "${{ secrets.GCP_TF_SA_KEY }}" | base64 --decode > gcp_tf_sa_key.json
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Plan
+        run: terraform plan -out=tfplan
+
+      - name: Save Plan Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: tfplan
+          path: ${{ env.tf_code_directory }}
+
+      - name: Cleanup GCP credentials
+        if: always()
+        run: rm -f gcp_tf_sa_key.json
+  
+  approve-changes:
+    name: Approve Terraform plan
+    runs-on: [self-hosted, Linux, Proxmox]
+    needs: terraform-plan
+    environment: review
+    steps:
+      - name: Accept changes
+        run: echo "Changes has been accepted.."
+
+  terraform-apply:
+    name: Apply Terraform changes
+    runs-on: [self-hosted, Linux, Proxmox]
+    needs: approve-changes
+    environment: ${{ inputs.environment }}
+    env: 
+      GOOGLE_APPLICATION_CREDENTIALS: gcp_tf_sa_key.json
+    defaults:
+      run:
+        working-directory: ${{ env.tf_code_directory }}
+        shell: bash
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set GCP credentials
+        run: |
+          echo "${{ secrets.GCP_TF_SA_KEY }}" | base64 --decode > gcp_tf_sa_key.json
+
+      - name: Download Plan Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: tfplan
+          path: ${{ env.tf_code_directory }}
+      
+      - name: Terraform init
+        run: terraform init
+
+      - name: Terraform apply
+        run: terraform apply -auto-approve tfplan
+
+      - name: Cleanup GCP credentials
+        if: always()
+        run: rm -f gcp_tf_sa_key.json
