@@ -42,8 +42,8 @@ jobs:
       
       - name: Prepare terraform.tfvars
         run: |
-          sed -i "s/gcp_project_id/${{ secrets.GCP_PROJECT_ID }}/g" artifact_registry/environments/${{ inputs.environment }}/terraform/terraform.tfvars
-          sed -i "s/impersonate_service_account/${{ secrets.GCP_REGISTRY_SA }}/g" artifact_registry/environments/${{ inputs.environment }}/terraform/terraform.tfvars
+          sed -i "s/gcp_project_id/${{ secrets.GCP_PROJECT_ID }}/g" terraform.tfvars
+          sed -i "s/impersonate_service_account/${{ secrets.GCP_REGISTRY_SA }}/g" terraform.tfvars
   
   terraform-plan:
     name: Terraform plan
