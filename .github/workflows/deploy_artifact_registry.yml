@@ -35,6 +35,12 @@ jobs:
         run: |
           sed -i "s/sed_gcp_project_id/${{ secrets.GCP_PROJECT_ID }}/g" terraform.tfvars
           sed -i "s/sed_impersonate_service_account/${{ secrets.GCP_REGISTRY_SA }}/g" terraform.tfvars
+      
+      - name: Upload terraform.tfvars artifact
+        uses: actions/upload-artifact@v5
+        with:
+          name: tfvars
+          path: "${{ env.tf_code_directory }}/terraform.tfvars" # Full path is needed
   
   terraform-plan:
     name: Terraform plan
@@ -51,6 +57,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5
 
+      - name: Download terraform.tfvars artifact
+        uses: actions/download-artifact@v5
+        with:
+          name: tfvars
+          path: "${{ env.tf_code_directory }}" # Full path is needed
+
       - name: Set GCP credentials
         run: |
           echo "${{ secrets.GCP_TF_SA_KEY }}" | base64 --decode > gcp_tf_sa_key.json
@@ -62,7 +74,7 @@ jobs:
         run: terraform plan -out=tfplan
 
       - name: Save Plan Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: tfplan
           path: ${{ env.tf_code_directory }}
@@ -100,7 +112,7 @@ jobs:
           echo "${{ secrets.GCP_TF_SA_KEY }}" | base64 --decode > gcp_tf_sa_key.json
 
       - name: Download Plan Artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: tfplan
           path: ${{ env.tf_code_directory }}
