@@ -15,7 +15,7 @@ It manages the deployment, configuration, and lifecycle of a self-hosted homelab
 - **Kubernetes**: Full on premises installation - environment for GitHub Actions runners deployment and more.
 - **NGINX**: Reverse proxy for internal services and web server.
 - **GitHub Actions**: CI/CD workflows for automated provisioning and configuration.
-- **GCP (Google Cloud Platform)**: Remote state storage and optional cloud resources.
+- **GCP (Google Cloud Platform)**: Remote state storage and cloud resources.
 - **Proxmox**: On-premises virtualization platform for VM management (two nodes and third corosync device to ensure quorum).
 - **Kaniko**: Container image builds without a Docker daemon, used in [gh-runner](https://github.com/AdrianT7/gh-runner) for building GitHub Actions runner images.
 - **Helm**: Kubernetes package manager for deploying and managing applications using charts, simplifying repeatable installations (e.g., GitHub Actions runners, monitoring tools).
@@ -29,12 +29,14 @@ It manages the deployment, configuration, and lifecycle of a self-hosted homelab
 - **k8s-dashboard/**: Dashboard for k8s management.
 - **gcp_storage/**, **gcp_tf_backend/**: GCP buckets for storage and Terraform state.
 - **bind9**: Authoritative DNS server.
+- **artifact registry**: GCP registry for storing artifacts.
 
 ## Repository Structure
 
 ```
 .
 ├── ansible/                # Ansible roles for service configuration (nginx, docker, zabbix, etc.)
+├── artifact_registry       # GCP artifact registry provisioning (Terraform)
 ├── docker/                 # Docker VM environments (Terraform & Ansible)
 ├── gcp_storage/            # GCP storage bucket provisioning (Terraform)
 ├── gcp_tf_backend/         # GCP backend for Terraform state (Terraform)
