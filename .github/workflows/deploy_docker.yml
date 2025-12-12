@@ -40,7 +40,7 @@ jobs:
         run: terraform plan -out=tfplan
 
       - name: Save Plan Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: tfplan
           path: docker/environments/${{ inputs.environment }}/terraform
@@ -79,7 +79,7 @@ jobs:
           echo "${{ secrets.GCP_TF_STORAGE_SA_KEY }}" | base64 --decode > gcp_tf_storage_sa_key.json
 
       - name: Download Plan Artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: tfplan
           path: docker/environments/${{ inputs.environment }}/terraform
